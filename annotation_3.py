@@ -8,10 +8,10 @@ from pylidc.utils import consensus
 
 scan = pl.query(pl.Scan).filter(pl.Scan.patient_id == 'LIDC-IDRI-0003').first()
 vol = scan.to_volume()
-
-scan.visualize()
-
 nods = scan.cluster_annotations()
+
+scan.visualize(annotation_groups=nods)
+
 for i, nod in enumerate(nods):
     print(i, len(nod))
 for i in range(len(nods)):
