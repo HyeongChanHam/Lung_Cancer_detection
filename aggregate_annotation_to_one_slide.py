@@ -9,7 +9,7 @@ vol = scan.to_volume()
 
 zero_matrix = np.zeros((512,512))
 
-for i in range(1,101):
+for i in range(1,201):
     if i<10:
         s = '000'+str(i)
     elif i<100:
@@ -26,7 +26,6 @@ for i in range(1,101):
         for i in range(m.shape[2]):
             zero_matrix[(x, y)] += m[:, :, i]
 
-    print(pid)
 sns.heatmap(zero_matrix)
 plt.title('heatmap of occurance per slice')
 plt.axis('off')

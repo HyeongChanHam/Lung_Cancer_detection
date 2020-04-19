@@ -1,12 +1,13 @@
 import pylidc as pl
 from pandas import DataFrame as df
 import matplotlib.pyplot as plt
-
+import seaborn as sns
+id = []
 diameter = []
 surface_area = []
 volume = []
 Sphericity = []
-for i in range(1,30):
+for i in range(1,200):
     if i<10:
         s = '000'+str(i)
     elif i<100:
@@ -18,25 +19,27 @@ for i in range(1,30):
     nodules = scan.cluster_annotations()
     if not nodules:
         continue
-    for nodule in nodules:
+    for idx, nodule in enumerate(nodules):
+        id.append(pid[-4:] + '_' + str(idx))
         diameter.append(nodule[0].diameter)
         surface_area.append(nodule[0].surface_area)
         volume.append(nodule[0].volume)
         Sphericity.append(nodule[0].Sphericity)
+    print(".",end='')
+print()
 
 data_dic = {}
+# data_dic['id'] = id
 data_dic['diameter'] = diameter
 data_dic['surface_area'] = surface_area
 data_dic['volume'] = volume
 data_dic['Sphericity'] = Sphericity
 df1 = df(data_dic)
-print(df1)
-print(df1['diameter'].mean())
-print(df1['diameter'].std())
-print(df1['diameter'].median())
-print(df1['diameter'].max())
-print(df1['diameter'].min())
-
+df1.index = id
+desc = df1.describe(include='all')
+print(desc)
+isnull = df1.isnull().sum()
+print(isnull)
 fig = plt.figure()
 ax1 = fig.add_subplot(221)
 ax2 = fig.add_subplot(222)
@@ -61,5 +64,9 @@ ax4.hist(df1['Sphericity'], align='mid')
 ax4.set_title('Nodule Sphericity')
 ax4.set_ylabel('number')
 plt.xticks(rotation=60)
+plt.tight_layout()
+plt.show()
+
+sns.pairplot(df1, diag_kind='kde', palette='bright')
 plt.tight_layout()
 plt.show()
